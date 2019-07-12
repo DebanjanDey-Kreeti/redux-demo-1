@@ -1,14 +1,27 @@
 import { createStore, applyMiddleware } from "redux";
+import {logger} from "redux-logger";
+import thunk from "redux-thunk";
+import axios from "axios";
+import promise from "redux-promise-middleware"
 
-const reducer = function(state, action) {
-  if(action.type === "INC") {
-    return state + action.payload;
-  }
-  else if(action.type === "DEC") {
-    return state - action.payload;
-  }
-  else if(action.type === "MUL") {
-    return state * action.payload;
+const initialState = {
+  fetching: false,
+  fetched: false,
+  users: [],
+  error: null,
+}
+
+const reducer = (state=initialState, action) => {
+  switch(action.type) {
+    case "FETCH_USERS_PENDING": {
+      return {...state, fetching: true};
+    }
+    case "FETCH_USERS_REJECTED": {
+      return {...state, fetching: false, error: action.payload};
+    }
+    case "FETCH_USERS_FULFILLED": {
+      return {...state, fetching: false, fetched: true, users: action.payload};
+    }
   }
   else if(action.type === "E") {
     throw new Error("Sob Howrah r bus Sealdah hoye jay na!");
@@ -33,16 +46,14 @@ const error = (store) => (next) => (action) => {
   
 }
 
-const middleware = applyMiddleware(logger,error);
+const middleware = applyMiddleware(promise, thunk, logger);
+const store = createStore(reducer, middleware);
 
-const store = createStore(reducer, 1, middleware);
-
-store.subscribe(() => {
+/* store.subscribe(() => {
   console.log("store changed", store.getState())
-});
+}); */
 
-store.dispatch({ type: "INC", payload: 1 });
-store.dispatch({ type: "INC", payload: 25 });
-store.dispatch({ type: "DEC", payload: 110 });
-store.dispatch({ type: "MUL", payload: -72 });
-store.dispatch({ type: "E" });
+store.dispatch({
+  type: "FETCH_USERS",
+  payload: axios.get("http://dummy.restapiexample.com/api/v1/employee/9238")
+});
