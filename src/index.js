@@ -1,8 +1,21 @@
-import { createStore, applyMiddleware } from "redux";
+import React from "react";
+import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
+
+import Layout from "./js/components/Layout";
+import store from "./js/store";
+
+const app = document.getElementById('app');
+
+ReactDOM.render(<Provider store={store}>
+    <Layout />
+  </Provider>, app);
+
+/* import { createStore, applyMiddleware } from "redux";
 import {logger} from "redux-logger";
 import thunk from "redux-thunk";
 import axios from "axios";
-import promise from "redux-promise-middleware"
+import promise from "redux-promise-middleware";
 
 const initialState = {
   fetching: false,
@@ -42,9 +55,9 @@ const store = createStore(reducer, middleware);
 
 /* store.subscribe(() => {
   console.log("store changed", store.getState())
-}); */
+}); 
 
 store.dispatch({
   type: "FETCH_USERS",
   payload: axios.get("http://dummy.restapiexample.com/api/v1/employee/9238")
-});
+}); */
