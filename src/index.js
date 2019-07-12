@@ -14,7 +14,7 @@ const reducer = function(state, action) {
     throw new Error("Sob Howrah r bus Sealdah hoye jay na!");
   }
   return state;
-}
+};
 
 const logger = (store) => (next) => (action) => {
   console.log("Action fired", action);
