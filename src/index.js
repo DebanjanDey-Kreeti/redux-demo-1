@@ -23,17 +23,8 @@ const reducer = (state=initialState, action) => {
       return {...state, fetching: false, fetched: true, users: action.payload};
     }
   }
-  else if(action.type === "E") {
-    throw new Error("Sob Howrah r bus Sealdah hoye jay na!");
-  }
   return state;
 };
-
-const logger = (store) => (next) => (action) => {
-  console.log("Action fired", action);
-  // action.type = "DEC";
-  next(action);
-}
 
 const error = (store) => (next) => (action) => {
   try{
