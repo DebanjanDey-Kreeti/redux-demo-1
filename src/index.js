@@ -23,9 +23,28 @@ const reducer = (state=initialState, action) => {
       return {...state, fetching: false, fetched: true, users: action.payload};
     }
   }
+  else if(action.type === "E") {
+    throw new Error("Sob Howrah r bus Sealdah hoye jay na!");
+  }
   return state;
+};
+
+const logger = (store) => (next) => (action) => {
+  console.log("Action fired", action);
+  // action.type = "DEC";
+  next(action);
 }
 
+const error = (store) => (next) => (action) => {
+  try{
+    next(action);
+  }
+  // action.type = "DEC";
+  catch(e) {
+    console.log("Ah!", e);
+  }
+  
+}
 
 const middleware = applyMiddleware(promise, thunk, logger);
 const store = createStore(reducer, middleware);
@@ -38,14 +57,3 @@ store.dispatch({
   type: "FETCH_USERS",
   payload: axios.get("http://dummy.restapiexample.com/api/v1/employee/9238")
 });
-
-/* store.dispatch((dispatch) => {
-  dispatch({type: "FETCH_USERS_START"});
-  .
-  then((response) => {
-    dispatch({type: "RECEIVE_USERS", payload: response.data });
-  }).catch((err) => {
-    dispatch({type: "FETCH_USERS_ERROR", payload: err});
-  });
-  // do something async
-}); */
