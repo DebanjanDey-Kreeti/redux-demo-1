@@ -1,26 +1,23 @@
 import React from "react";
+import { connect } from "react-redux";
+import { fetchUser } from "./actions/userActions";
 
-import Footer from "./Footer";
-import Header from "./Header";
+@connect((store) => {
+  return {
+    user: store.user.user,
+    userFetched: store.user.fetched,
+    tweets: store.tweets.tweets,
+  };
+})
 
-export default class Layout extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      title: "Welcome",
-    };
-  }
-
-  changeTitle(title) {
-    this.setState({title});
+class Layout extends React.Component {
+  componentWillMount() {
+    this.props.dispatch(fetchUser());
   }
 
   render() {
-    return (
-      <div>
-        <Header changeTitle={this.changeTitle.bind(this)} title={this.state.title} />
-        <Footer />
-      </div>
-    );
+    return <h1> {this.props.user.name} </h1>;
   }
 }
+
+export default Layout;
